@@ -10,7 +10,7 @@ import { formatRupiah, SITE } from "@/lib/site";
 import { orderLink } from "@/lib/order";
 
 export default function CartPage() {
-  const { lines, totalQty, subtotal, setQty, removeLine, clearCart } = useStore();
+  const { ready, lines, totalQty, subtotal, setQty, removeLine, clearCart } = useStore();
   const [form, setForm] = useState({ nama: "", telepon: "", sekolah: "", alamat: "", catatan: "" });
   const free = totalQty >= SITE.freeShippingMinQty;
   const canSend = form.nama.trim() && form.telepon.trim() && form.alamat.trim();
@@ -18,7 +18,9 @@ export default function CartPage() {
 
   return (
     <PageShell title="Tas Belanja" intro="Periksa pesanan, isi data pengiriman, lalu kirim lewat WhatsApp. Admin mengonfirmasi stok, ongkir dan cara pembayaran.">
-      {lines.length === 0 ? (
+      {!ready ? (
+        <p className="py-12 text-sm">Memuat tas belanja...</p>
+      ) : lines.length === 0 ? (
         <div className="py-16 text-center">
           <p className="font-display text-2xl font-extrabold">Tas Anda masih kosong</p>
           <p className="mt-2 text-sm">Pilih seragam, tentukan warna dan ukuran, lalu tambahkan ke tas.</p>
