@@ -1,111 +1,432 @@
+"use client";
+
+import Image from "next/image";
 import Link from "next/link";
+import { motion, useReducedMotion } from "framer-motion";
 import GarmentArt from "@/components/GarmentArt";
-import HeroCarousel from "@/components/HeroCarousel";
-import ProductCarousel from "@/components/ProductCarousel";
-import { RulerIcon, TruckIcon, WhatsAppIcon } from "@/components/Icons";
-import { CATEGORIES, PRODUCTS } from "@/data/catalog";
-import { SITE } from "@/lib/site";
+import {
+  CATEGORIES,
+  PRODUCT_BY_SLUG,
+  PRODUCTS,
+  type CategoryId,
+} from "@/data/catalog";
+import { formatRupiah } from "@/lib/site";
+
+const fadeUp = {
+  hidden: { opacity: 0, y: 24 },
+  visible: { opacity: 1, y: 0 },
+};
+
+const fadeUpItem = {
+  hidden: { opacity: 0, y: 24 },
+  visible: (i: number) => ({
+    opacity: 1,
+    y: 0,
+    transition: { delay: i * 0.08 },
+  }),
+};
+
+const CATEGORY_IMAGES: Partial<Record<CategoryId, string>> = {
+  sd: "/images/Frame.png",
+  smp: "/images/Frame2.png",
+  sma: "/images/Frame3.png",
+  pramuka: "/images/Frame4.png",
+  "olahraga-batik": "/images/Frame5.png",
+};
+
+const CATEGORY_LABELS: Partial<Record<CategoryId, string>> = {
+  sd: "SD (Merah Putih)",
+  smp: "SMP (Putih Biru)",
+  sma: "SMA (Putih Abu-abu)",
+};
+
+const FEATURED = [
+  {
+    slug: "kemeja-sd-putih-lengan-pendek",
+    name: "Seragam SD Putih",
+    image: "/images/Frame produk unggulan sd.png",
+  },
+  {
+    slug: "celana-panjang-biru-smp",
+    name: "Seragam SMP Biru",
+    image: "/images/Frame produk unggulan smp.png",
+  },
+  {
+    slug: "celana-panjang-abu-sma",
+    name: "Seragam SMA Abu",
+    image: "/images/Frame produk unggulan sma.png",
+  },
+  {
+    slug: "setelan-pramuka-siaga",
+    name: "Setelan Pramuka",
+    image: "/images/Frame produk unggulan pramuka.png",
+  },
+];
+
+const TESTIMONIALS = [
+  {
+    quote:
+      "Seragam anak rapi sampai akhir tahun ajaran. Jahitan tidak menganga walau dicuci mingguan.",
+    name: "Bu Rina",
+    role: "Orang tua siswa SD",
+  },
+  {
+    quote:
+      "Pesan 120 pcs untuk sekolah, ukuran seragamnya konsisten. Gratis ongkir sesuai janji.",
+    name: "Pak Dedi",
+    role: "Wakil Kepala Sekolah",
+  },
+  {
+    quote:
+      "Tabel ukuran lengkap jadi tidak salah pilih. Blus anak saya pas sekali dipakai.",
+    name: "Sari",
+    role: "Orang tua siswa SMP",
+  },
+];
 
 export default function Home() {
-  const bestSellers = PRODUCTS.filter((p) => p.badge === "Terlaris" || p.badge === "Hemat").concat(PRODUCTS.filter((p) => !p.badge).slice(0, 4)).slice(0, 10);
-  const featured = [...PRODUCTS].sort((a, b) => b.order - a.order).slice(0, 10);
-  const tiles = [
-    { title: "Paket Lengkap", sub: "Atasan dan bawahan satu paket", href: "/koleksi/semua?tipe=setelan", type: "setelan" as const, color: "#ffffff", bg: "bg-brand-soft" },
-    { title: "Olahraga", sub: "Kaos, training dan jaket", href: "/koleksi/olahraga-batik", type: "kaos" as const, color: "#0f766e", bg: "bg-neutral-200" },
-    { title: "Atribut", sub: "Dasi, topi, sabuk, kerudung", href: "/koleksi/atribut", type: "dasi" as const, color: "#c1121f", bg: "bg-brand" },
-    { title: "Batik Sekolah", sub: "Motif cetak tahan cuci", href: "/koleksi/olahraga-batik?tipe=batik", type: "batik" as const, color: "#c9a66b", bg: "bg-soft" },
-  ];
+  const countFor = (id: CategoryId) =>
+    PRODUCTS.filter((p) => p.categoryId === id).length;
+  const reduced = useReducedMotion();
+  const variants = reduced ? undefined : fadeUp;
+  const itemVariants = reduced ? undefined : fadeUpItem;
+  const viewport = { once: false, margin: "-80px" };
 
   return (
     <>
-      <section data-cc-animate="" className="mx-auto flex max-w-[1440px] flex-col gap-6 px-4 py-10 md:flex-row md:items-center md:px-8 xl:px-16" aria-label="Belanja per jenjang">
-        <h2 className="shrink-0 font-display text-4xl font-black md:w-56">Belanja per Jenjang</h2>
-        <ul className="no-scrollbar -mx-4 flex flex-1 gap-4 overflow-x-auto px-4 md:mx-0 md:justify-between md:px-0">
-          {CATEGORIES.map((c) => (
-            <li key={c.id} className="w-28 shrink-0 md:w-auto md:flex-1">
-              <Link href={`/koleksi/${c.id}`} className="group flex flex-col items-center gap-2">
-                <span className="block h-28 w-28 overflow-hidden md:h-32 md:w-32">
-                  <span className="hp-tile-media block h-full w-full">
-                    <GarmentArt type={c.art} color={c.id === "atribut" ? "#c1121f" : c.id === "sd" || c.id === "smp" || c.id === "sma" ? "#ffffff" : c.color} accent={c.color} />
+      <section className="bg-white" aria-label="Pengantar toko">
+        <div className="mx-auto grid max-w-[1440px] items-center gap-10 px-4 py-14 md:grid-cols-[5fr_7fr] md:px-8 xl:px-16">
+          <motion.div
+            initial="hidden"
+            animate="visible"
+            variants={{ visible: { transition: { staggerChildren: 0.1 } } }}
+            className="flex flex-col items-center text-center md:items-start md:text-left"
+          >
+            <motion.h1
+              variants={fadeUp}
+              className="font-display text-4xl font-black leading-[1.02] text-ink md:text-6xl"
+            >
+              Seragam rapi, nyaman dipakai seharian.
+            </motion.h1>
+            <motion.p
+              variants={fadeUp}
+              className="mt-6 max-w-md text-xs text-body md:text-sm"
+            >
+              Kualitas premium dengan bahan katun lembut dan jahitan tahan lama.
+              Cocok untuk kebutuhan sekolah harian dan acara formal.
+            </motion.p>
+            <motion.div
+              variants={fadeUp}
+              className="mt-10 flex flex-wrap justify-center gap-4 md:justify-start"
+            >
+              <Link
+                href="/koleksi/semua"
+                className="border border-ink px-8 py-3.5 text-sm font-bold uppercase tracking-wide text-ink transition-colors duration-200 hover:bg-ink hover:text-white"
+              >
+                Lihat Koleksi
+              </Link>
+              <Link
+                href="/kontak"
+                className="bg-ink px-8 py-3.5 text-sm font-bold uppercase tracking-wide text-white transition-opacity duration-200 hover:opacity-80"
+              >
+                Pesan Partai/Sekolah
+              </Link>
+            </motion.div>
+          </motion.div>
+          <motion.div
+            initial="hidden"
+            animate="visible"
+            variants={variants}
+            className="relative aspect-square max-h-[720px] overflow-hidden"
+          >
+            <Image
+              src="/images/Hero Image.png"
+              alt="Siswa mengenakan seragam sekolah"
+              fill
+              priority
+              sizes="(max-width: 768px) 100vw, 50vw"
+              className="object-contain object-right"
+            />
+          </motion.div>
+        </div>
+      </section>
+
+      <section
+        className="mx-auto max-w-[1440px] px-4 py-10 md:px-8 xl:px-16"
+        aria-label="Belanja per kategori"
+      >
+        <motion.div
+          initial="hidden"
+          whileInView="visible"
+          viewport={viewport}
+          variants={variants}
+          className="mx-auto max-w-2xl text-center"
+        >
+          <h2 className="font-display text-4xl font-black">
+            Belanja Berdasarkan Kategori
+          </h2>
+          <p className="mt-3 text-sm text-body">
+            Pilih kategori yang sesuai dengan kebutuhan sekolah atau organisasi
+            Anda
+          </p>
+        </motion.div>
+        <ul className="mt-10 grid gap-6 sm:grid-cols-2 lg:grid-cols-5">
+          {CATEGORIES.filter((c) => c.id !== "atribut").map((c, i) => (
+            <motion.li
+              key={c.id}
+              initial="hidden"
+              whileInView="visible"
+              viewport={viewport}
+              variants={itemVariants}
+              custom={i}
+            >
+              <Link
+                href={`/koleksi/${c.id}`}
+                className="group block border border-neutral-200"
+              >
+                <span className="block aspect-[4/3] overflow-hidden bg-soft">
+                  <span className="hp-tile-media relative block h-full w-full">
+                    {CATEGORY_IMAGES[c.id] ? (
+                      <Image
+                        src={CATEGORY_IMAGES[c.id]!}
+                        alt={c.name}
+                        fill
+                        sizes="20vw"
+                        className="object-contain"
+                      />
+                    ) : (
+                      <GarmentArt
+                        type={c.art}
+                        color={c.id === "atribut" ? "#c1121f" : c.color}
+                        accent={c.color}
+                      />
+                    )}
                   </span>
                 </span>
-                <span className="text-center text-sm text-ink underline underline-offset-4 group-hover:no-underline">{c.label}</span>
+                <span className="flex flex-col gap-1 p-4">
+                  <span className="font-display text-lg font-extrabold text-ink group-hover:underline underline-offset-4">
+                    {CATEGORY_LABELS[c.id] ?? c.label}
+                  </span>
+                  <span className="text-xs text-muted">
+                    {countFor(c.id)} item
+                  </span>
+                </span>
               </Link>
-            </li>
+            </motion.li>
           ))}
         </ul>
       </section>
 
-      <HeroCarousel />
-
       <div className="space-y-20 pt-16">
-        <ProductCarousel title="Seragam Terlaris" href="/koleksi/semua" products={bestSellers} />
-
-        <section data-cc-animate="" className="mx-auto grid max-w-[1440px] gap-0 px-4 md:grid-cols-2 md:px-8 xl:px-16" aria-label="Bahan nyaman">
-          <div className="flex flex-col justify-end bg-brand p-8 md:min-h-[460px] md:p-12">
-            <p className="text-xs font-bold uppercase tracking-[0.2em] text-ink">Bahan pilihan</p>
-            <h2 className="mt-3 font-display text-5xl font-black leading-[0.95] md:text-6xl">Nyaman dari pagi sampai pulang sekolah.</h2>
-            <p className="mt-4 max-w-md text-ink">Katun Oxford TC, drill dan rapih drill dipilih supaya adem, tidak mudah melar dan tahan dicuci berulang kali.</p>
-            <Link href="/panduan-ukuran" className="mt-6 w-fit text-sm font-bold text-ink underline underline-offset-4">Cek panduan ukuran</Link>
-          </div>
-          <div className="grid grid-rows-2">
-            <div className="group flex items-center justify-between overflow-hidden bg-soft p-8">
-              <div>
-                <h3 className="font-display text-4xl font-black">Putih Bersih</h3>
-                <Link href="/koleksi/semua?warna=Putih" className="mt-3 inline-block text-sm text-ink underline underline-offset-4">Lihat koleksi</Link>
-              </div>
-              <div className="hp-tile-media h-40 w-40 shrink-0"><GarmentArt type="kemeja" color="#ffffff" /></div>
-            </div>
-            <div className="group flex items-center justify-between overflow-hidden bg-neutral-900 p-8 text-white">
-              <div>
-                <h3 className="font-display text-4xl font-black !text-white">Merah Putih</h3>
-                <Link href="/koleksi/sd" className="mt-3 inline-block text-sm underline underline-offset-4">Seragam SD</Link>
-              </div>
-              <div className="hp-tile-media h-40 w-40 shrink-0"><GarmentArt type="rok" color="#c1121f" /></div>
-            </div>
-          </div>
+        <section
+          className="mx-auto max-w-[1440px] px-4 md:px-8 xl:px-16"
+          aria-label="Produk unggulan"
+        >
+          <motion.div
+            initial="hidden"
+            whileInView="visible"
+            viewport={viewport}
+            variants={variants}
+            className="mx-auto max-w-2xl text-center"
+          >
+            <h2 className="font-display text-4xl font-black">
+              Produk Unggulan
+            </h2>
+            <p className="mt-3 text-sm text-body">
+              Pilihan terbaik dari kami untuk kebutuhan sekolah harian
+            </p>
+          </motion.div>
+          <ul className="mt-10 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
+            {FEATURED.map((f, i) => {
+              const prod = PRODUCT_BY_SLUG[f.slug];
+              const sizeRange = `${prod.sizes[0]} - ${prod.sizes[prod.sizes.length - 1]}`;
+              return (
+                <motion.li
+                  key={f.slug}
+                  initial="hidden"
+                  whileInView="visible"
+                  viewport={viewport}
+                  variants={itemVariants}
+                  custom={i}
+                >
+                  <Link href={`/produk/${f.slug}`} className="group block">
+                    <span className="relative block aspect-square overflow-hidden bg-soft">
+                      <Image
+                        src={f.image}
+                        alt={f.name}
+                        fill
+                        sizes="25vw"
+                        className="object-contain transition-transform duration-500 group-hover:scale-105"
+                      />
+                    </span>
+                    <span className="mt-3 block font-display text-lg font-extrabold text-ink group-hover:underline underline-offset-4">
+                      {f.name}
+                    </span>
+                    <span className="mt-1 block text-xs text-muted">
+                      Ukuran: {sizeRange}
+                    </span>
+                    <span className="mt-1 block text-ink">
+                      {formatRupiah(prod.price)}
+                    </span>
+                  </Link>
+                </motion.li>
+              );
+            })}
+          </ul>
         </section>
 
-        <ProductCarousel title="Koleksi Terbaru" href="/koleksi/semua" products={featured} />
-
-        <section data-cc-animate="" className="mx-auto max-w-[1440px] px-4 md:px-8 xl:px-16" aria-label="Koleksi">
-          <ul className="grid grid-cols-2 gap-4 md:grid-cols-4">
-            {tiles.map((t) => (
-              <li key={t.title}>
-                <Link href={t.href} className="group block border border-neutral-200">
-                  <span className={`block aspect-[4/3] overflow-hidden ${t.bg}`}>
-                    <span className="hp-tile-media block h-full w-full">
-                      <span className="block h-full w-full scale-90"><GarmentArt type={t.type} color={t.color} accent="#c1121f" className="mix-blend-multiply" /></span>
-                    </span>
-                  </span>
-                  <span className="block p-4 text-center">
-                    <span className="block font-display text-xl font-extrabold">{t.title}</span>
-                    <span className="mt-1 block text-xs text-muted">{t.sub}</span>
-                    <span className="mt-3 inline-block text-xs text-ink underline underline-offset-4 group-hover:no-underline">Lihat koleksi</span>
-                  </span>
-                </Link>
-              </li>
+        <section
+          className="mx-auto max-w-[1440px] px-4 md:px-8 xl:px-16"
+          aria-label="Kenapa beli di sini"
+        >
+          <motion.h2
+            initial="hidden"
+            whileInView="visible"
+            viewport={viewport}
+            variants={variants}
+            className="text-center font-display text-3xl font-extrabold md:text-4xl"
+          >
+            Kenapa Beli di Sini?
+          </motion.h2>
+          <ul className="mt-10 grid gap-6 md:grid-cols-2">
+            {[
+              {
+                title: "Bahan Awet Jahitan Kuat",
+                body: (
+                  <>
+                    Katun Oxford TC, drill dan rapih drill dipilih supaya adem,
+                    tidak mudah melar dan tahan dicuci berulang kali.
+                  </>
+                ),
+              },
+              {
+                title: "Ukuran yang Pas",
+                body: (
+                  <>
+                    Tabel ukuran lengkap di setiap produk, plus{" "}
+                    <Link
+                      href="/panduan-ukuran"
+                      className="underline underline-offset-4"
+                    >
+                      panduan cara mengukur
+                    </Link>{" "}
+                    yang mudah diikuti.
+                  </>
+                ),
+              },
+            ].map((item, i) => (
+              <motion.li
+                key={item.title}
+                initial="hidden"
+                whileInView="visible"
+                viewport={viewport}
+                variants={itemVariants}
+                custom={i}
+                className="flex flex-col items-center gap-3 border border-neutral-200 bg-soft p-10 text-center"
+              >
+                <span className="font-display text-2xl font-black">
+                  {item.title}
+                </span>
+                <p className="max-w-sm text-sm">{item.body}</p>
+              </motion.li>
             ))}
           </ul>
         </section>
 
-        <section data-cc-animate="" className="mx-auto max-w-[1440px] border-y border-neutral-200 md:px-8 xl:px-16" aria-label="Keunggulan">
-          <ul className="grid divide-neutral-200 md:grid-cols-3 md:divide-x">
-            <li className="flex flex-col items-center gap-2 px-6 py-8 text-center">
-              <TruckIcon className="h-9 w-9 text-ink" />
-              <p className="font-bold text-ink">Gratis ongkir pesanan sekolah</p>
-              <p className="text-sm">Minimal {SITE.freeShippingMinQty} pcs. Ongkir pesanan lain dikonfirmasi admin.</p>
-            </li>
-            <li className="flex flex-col items-center gap-2 px-6 py-8 text-center">
-              <WhatsAppIcon className="h-9 w-9 text-ink" />
-              <p className="font-bold text-ink">Pesan dan bayar lewat WhatsApp</p>
-              <p className="text-sm">Kirim isi tas belanja, admin membalas dengan total dan rincian transfer.</p>
-            </li>
-            <li className="flex flex-col items-center gap-2 px-6 py-8 text-center">
-              <RulerIcon className="h-9 w-9 text-ink" />
-              <p className="font-bold text-ink">Ukuran jelas</p>
-              <p className="text-sm">Tabel ukuran di setiap produk, plus <Link href="/panduan-ukuran" className="underline">panduan cara mengukur</Link>.</p>
-            </li>
+        <section
+          className="mx-auto max-w-[1440px] px-4 md:px-8 xl:px-16"
+          aria-label="Ukuran"
+        >
+          <div className="grid gap-8 md:grid-cols-2 md:items-stretch">
+            <motion.div
+              initial="hidden"
+              whileInView="visible"
+              viewport={viewport}
+              variants={variants}
+            >
+              <h3 className="font-display text-2xl font-black md:text-3xl">
+                Ukuran yang Pas
+              </h3>
+              <p className="mt-4 text-sm text-body">
+                Kami menyediakan panduan ukuran untuk memastikan seragam Anda
+                nyaman dipakai. Cek panduan lengkap kami untuk memilih ukuran
+                yang tepat.
+              </p>
+              <Link
+                href="/panduan-ukuran"
+                className="mt-4 inline-block text-sm font-bold text-ink underline underline-offset-4"
+              >
+                Lihat panduan lengkap &rarr;
+              </Link>
+            </motion.div>
+            <motion.div
+              initial="hidden"
+              whileInView="visible"
+              viewport={viewport}
+              variants={variants}
+              className="flex w-full flex-col justify-center overflow-hidden border border-neutral-200"
+            >
+              <table className="w-full text-center text-sm">
+                <thead className="bg-soft">
+                  <tr>
+                    <th className="px-4 py-3 font-bold text-ink">Ukuran</th>
+                    <th className="px-4 py-3 font-bold text-ink">24</th>
+                    <th className="px-4 py-3 font-bold text-ink">26</th>
+                    <th className="px-4 py-3 font-bold text-ink">28</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr className="border-t border-neutral-200">
+                    <td className="px-4 py-3 font-bold text-ink">Lebar Dada</td>
+                    <td className="px-4 py-3 text-muted">34cm</td>
+                    <td className="px-4 py-3 text-muted">36cm</td>
+                    <td className="px-4 py-3 text-muted">38cm</td>
+                  </tr>
+                  <tr className="border-t border-neutral-200">
+                    <td className="px-4 py-3 font-bold text-ink">Panjang Baju</td>
+                    <td className="px-4 py-3 text-muted">52cm</td>
+                    <td className="px-4 py-3 text-muted">54cm</td>
+                    <td className="px-4 py-3 text-muted">56cm</td>
+                  </tr>
+                </tbody>
+              </table>
+            </motion.div>
+          </div>
+        </section>
+
+        <section
+          className="mx-auto max-w-[1440px] px-4 md:px-8 xl:px-16"
+          aria-label="Testimoni"
+        >
+          <motion.h2
+            initial="hidden"
+            whileInView="visible"
+            viewport={viewport}
+            variants={variants}
+            className="text-center font-display text-3xl font-extrabold md:text-4xl"
+          >
+            Testimoni
+          </motion.h2>
+          <ul className="mt-10 grid gap-6 md:grid-cols-3">
+            {TESTIMONIALS.map((t, i) => (
+              <motion.li
+                key={t.name}
+                initial="hidden"
+                whileInView="visible"
+                viewport={viewport}
+                variants={itemVariants}
+                custom={i}
+                className="flex flex-col border border-neutral-200 p-8"
+              >
+                <p className="flex-1 text-sm leading-relaxed">
+                  {"\u201C"}
+                  {t.quote}
+                  {"\u201D"}
+                </p>
+                <p className="mt-6 font-bold text-ink">{t.name}</p>
+                <p className="text-xs text-muted">{t.role}</p>
+              </motion.li>
+            ))}
           </ul>
         </section>
       </div>
