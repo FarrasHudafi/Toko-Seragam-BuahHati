@@ -1,29 +1,42 @@
 import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
+import { Playfair_Display } from "next/font/google";
 import "./globals.css";
+import { StoreProvider } from "@/context/StoreContext";
+import Header from "@/components/Header";
+import Footer from "@/components/Footer";
+import CartDrawer from "@/components/CartDrawer";
+import SearchPanel from "@/components/SearchPanel";
+import SideDiscountTab from "@/components/SideDiscountTab";
+import WishlistFab from "@/components/WishlistFab";
+import ScrollEffects from "@/components/ScrollEffects";
 
-const geistSans = Geist({
-  variable: "--font-geist-sans",
+const display = Playfair_Display({
+  variable: "--font-display",
   subsets: ["latin"],
-});
-
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
-  subsets: ["latin"],
+  weight: ["700", "800", "900"],
 });
 
 export const metadata: Metadata = {
-  title: "Toko Seragam",
-  description: "Web store seragam",
+  title: "Seragam Buah Hati | Toko Seragam Sekolah",
+  description:
+    "Seragam SD, SMP, SMA, Pramuka, olahraga dan atribut sekolah. Pilih warna dan ukuran, pesan lewat WhatsApp.",
 };
 
-export default function RootLayout({ children }: LayoutProps<"/">) {
+export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
   return (
-    <html
-      lang="en"
-      className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
-    >
-      <body className="min-h-full flex flex-col">{children}</body>
+    <html lang="id" className={`${display.variable} h-full`}>
+      <body className="flex min-h-full flex-col bg-white text-body">
+        <StoreProvider>
+          <Header />
+          <SearchPanel />
+          <main className="flex-1">{children}</main>
+          <Footer />
+          <CartDrawer />
+          <SideDiscountTab />
+          <WishlistFab />
+          <ScrollEffects />
+        </StoreProvider>
+      </body>
     </html>
   );
 }

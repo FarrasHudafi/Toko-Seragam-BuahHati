@@ -1,26 +1,373 @@
 @import "tailwindcss";
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --ink: #000000;
+  --paper: #ffffff;
+  --soft: #f3f4f6;
+  --body: #374151;
+  --muted: #6b7280;
+  --brand: #ffcb00;
+  --brand-soft: #fdda6f;
+  --promo: #bd2949;
+  --aos-animate-duration: 1s;
 }
 
 @theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  --color-ink: var(--ink);
+  --color-soft: var(--soft);
+  --color-body: var(--body);
+  --color-muted: var(--muted);
+  --color-brand: var(--brand);
+  --color-brand-soft: var(--brand-soft);
+  --color-promo: var(--promo);
+  --font-display: var(--font-display), "Times New Roman", serif;
+  --font-sans: "Helvetica Neue", Helvetica, Arial, sans-serif;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+html {
+  scroll-behavior: smooth;
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  background: var(--paper);
+  color: var(--body);
+  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+  -webkit-font-smoothing: antialiased;
+}
+
+h1, h2, h3 {
+  font-family: var(--font-display), "Times New Roman", serif;
+  color: var(--ink);
+  letter-spacing: -0.02em;
+}
+
+.font-display {
+  font-family: var(--font-display), "Times New Roman", serif;
+  letter-spacing: -0.02em;
+}
+
+:focus-visible {
+  outline: 2px solid var(--ink);
+  outline-offset: 2px;
+}
+
+::selection {
+  background: var(--brand);
+  color: var(--ink);
+}
+
+.no-scrollbar {
+  scrollbar-width: none;
+}
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+
+/* Dual-handle price slider: two native range inputs stacked. */
+.dual-range {
+  position: relative;
+  height: 20px;
+}
+.dual-range input[type="range"] {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  margin: 0;
+  background: none;
+  pointer-events: none;
+  appearance: none;
+  -webkit-appearance: none;
+}
+.dual-range input[type="range"]::-webkit-slider-thumb {
+  appearance: none;
+  -webkit-appearance: none;
+  pointer-events: auto;
+  width: 18px;
+  height: 18px;
+  border-radius: 9999px;
+  background: #fff;
+  border: 2px solid var(--ink);
+  cursor: grab;
+}
+.dual-range input[type="range"]::-moz-range-thumb {
+  pointer-events: auto;
+  width: 14px;
+  height: 14px;
+  border-radius: 9999px;
+  background: #fff;
+  border: 2px solid var(--ink);
+  cursor: grab;
+}
+.dual-range input[type="range"]::-webkit-slider-runnable-track {
+  background: transparent;
+}
+
+/* ==========================================================================
+   Hush Puppies Reference Animations (animate-on-scroll, slideshow, drawers,
+   product cards, multi-column tiles, disclosures, buttons, footer)
+   ========================================================================== */
+
+/* 1. Animate-on-scroll (animate-on-scroll.css: 0.8s duration, 0.3s delay) */
+@keyframes hp-fade-in {
+  0% { opacity: 0; }
+  100% { opacity: 1; }
+}
+
+[data-cc-animate] {
+  opacity: 0;
+}
+
+[data-cc-animate].cc-animate-in {
+  animation: hp-fade-in calc(var(--aos-animate-duration, 1s) * 0.8) 0.3s cubic-bezier(0.39, 0.575, 0.565, 1) both;
+}
+
+/* 2. Hero Slideshow (slideshow.css: slide-fade + text-overlay + 4s timer) */
+.hp-slide {
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+  transition: visibility 0s 0.6s;
+}
+.hp-slide.is-active {
+  opacity: 1;
+  visibility: visible;
+  pointer-events: auto;
+  transition: none;
+}
+.hp-slide-motion {
+  transform: translateX(160px);
+  opacity: 0;
+  transition: transform 0.6s cubic-bezier(0.215, 0.61, 0.355, 1), opacity 0.6s;
+}
+.hp-slide.is-active .hp-slide-motion {
+  transform: translateX(0);
+  opacity: 1;
+}
+.hp-slide.is-exiting {
+  visibility: visible;
+}
+.hp-slide.is-exiting .hp-slide-motion {
+  transform: translateX(-80px);
+  opacity: 0;
+  transition: transform 0.6s, opacity 1s;
+}
+.hp-text-overlay {
+  transform: translateY(30px);
+  opacity: 0;
+}
+.hp-slide.is-active .hp-text-overlay {
+  transform: translateY(0);
+  opacity: 1;
+  transition: transform 1s cubic-bezier(0.165, 0.84, 0.44, 1), opacity 0.7s ease-out 0.3s;
+}
+
+@keyframes hp-slide-progress {
+  from { transform: scaleX(0); }
+  to { transform: scaleX(1); }
+}
+.hp-slide-timer {
+  transform-origin: left center;
+  animation: hp-slide-progress 4s linear forwards;
+}
+
+/* 3. Product Card Hover Scale, Secondary View Crossfade, Quick-Add, Swatches */
+.hp-card {
+  transition: transform 0.55s ease-in-out;
+}
+.hp-card-scale:hover {
+  transform: scale(1.05);
+}
+.hp-card-main-img {
+  transition: opacity 0.5s ease;
+}
+.hp-card-hover-img {
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.5s ease, visibility 0s 0.5s;
+}
+.hp-card:hover .hp-card-main-img {
+  opacity: 0;
+}
+.hp-card:hover .hp-card-hover-img {
+  opacity: 1;
+  visibility: visible;
+  transition: opacity 0.5s ease, visibility 0s;
+}
+.hp-quick-add {
+  transform: translateY(10px);
+  opacity: 0;
+  transition: opacity 0.2s, transform 0.2s;
+}
+.hp-card:hover .hp-quick-add,
+.hp-card:focus-within .hp-quick-add,
+.hp-quick-add.is-visible {
+  transform: translateY(0);
+  opacity: 1;
+}
+.hp-opt-label {
+  transition: opacity 0.6s, color 0.6s, border-color 0.6s, background-color 0.6s;
+}
+
+/* 4. Multi-Column Category Tile Zoom (hushpuppies-homepage.css: 1s ease) */
+.hp-tile-media {
+  transition: transform 1s ease;
+}
+.group:hover .hp-tile-media {
+  transform: scale(1.1);
+}
+
+/* 5. Diagonal Sweep Buttons (product.css & main.css: 104deg linear-gradient) */
+.hp-btn-primary {
+  background: linear-gradient(104deg, #262626 60%, #000000 60% 100%) no-repeat 100% 100%;
+  background-size: 300% 100%;
+  color: #ffffff;
+  transition: opacity 0.6s ease, color 0.6s ease, background-position 0.4s ease-out;
+}
+.hp-btn-primary:hover {
+  background-position: 0% 100%;
+}
+.hp-btn-secondary {
+  background: linear-gradient(104deg, #000000 60%, transparent 60% 100%) no-repeat 100% 100%;
+  background-size: 300% 100%;
+  transition: opacity 0.6s ease, color 0.6s ease, border-color 0.6s ease, background-position 0.4s ease-out;
+}
+.hp-btn-secondary:hover {
+  background-position: 0% 100%;
+  color: #ffffff;
+}
+
+/* 6. Overlay, Drawers, Mega Menu, & Search Panel (main.css) */
+.hp-overlay {
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+  transition: visibility 0.3s, opacity 0.3s;
+}
+.hp-overlay.is-open {
+  opacity: 1;
+  visibility: visible;
+  pointer-events: auto;
+}
+
+.hp-drawer-right {
+  transform: translate3d(100%, 0, 0);
+  visibility: hidden;
+  transition: visibility 0s 0.6s, transform 0.7s cubic-bezier(0.19, 1, 0.22, 1);
+}
+.hp-drawer-right.is-open {
+  transform: translateZ(0);
+  visibility: visible;
+  transition: visibility 0s 0s, transform 0.7s cubic-bezier(0.19, 1, 0.22, 1);
+}
+
+.hp-drawer-left {
+  transform: translate3d(-100%, 0, 0);
+  visibility: hidden;
+  transition: visibility 0s 0.6s, transform 0.7s cubic-bezier(0.19, 1, 0.22, 1);
+}
+.hp-drawer-left.is-open {
+  transform: translateZ(0);
+  visibility: visible;
+  transition: visibility 0s 0s, transform 0.7s cubic-bezier(0.19, 1, 0.22, 1);
+}
+
+.hp-drawer-content {
+  opacity: 0;
+  transition: opacity 0.6s;
+}
+.is-open .hp-drawer-content {
+  opacity: 1;
+}
+
+.hp-drawer-footer {
+  transform: translate3d(0, 100%, 0);
+  opacity: 0;
+  transition: transform 0.4s cubic-bezier(0.165, 0.84, 0.44, 1) 0.2s, opacity 0.7s;
+}
+.is-open .hp-drawer-footer {
+  transform: translateZ(0);
+  opacity: 1;
+}
+
+.hp-search-panel {
+  transform: translate3d(0, -24px, 0);
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+  transition: visibility 0s 0.3s, opacity 0.3s ease, transform 0.4s cubic-bezier(0.19, 1, 0.22, 1);
+}
+.hp-search-panel.is-open {
+  transform: translateZ(0);
+  opacity: 1;
+  visibility: visible;
+  pointer-events: auto;
+  transition: visibility 0s 0s, opacity 0.3s ease, transform 0.4s cubic-bezier(0.19, 1, 0.22, 1);
+}
+
+.hp-mega-nav {
+  transform: translateY(-6px);
+  opacity: 0;
+  visibility: hidden;
+  transition: transform 0.3s cubic-bezier(0.19, 1, 0.22, 1), opacity 0.2s cubic-bezier(0.19, 1, 0.22, 1), visibility 0.3s cubic-bezier(0.19, 1, 0.22, 1);
+}
+.group:hover .hp-mega-nav,
+.group:focus-within .hp-mega-nav {
+  transform: translateY(0);
+  opacity: 1;
+  visibility: visible;
+}
+
+/* 7. Disclosures / Accordions (main.css: 0.3s cubic-bezier(0.2, 0.6, 0.4, 1)) */
+.hp-disclosure-panel {
+  display: grid;
+  grid-template-rows: 0fr;
+  transition: grid-template-rows 0.3s cubic-bezier(0.2, 0.6, 0.4, 1);
+}
+.hp-disclosure-panel.is-open {
+  grid-template-rows: 1fr;
+}
+.hp-disclosure-inner {
+  overflow: hidden;
+}
+.hp-disclosure-content {
+  opacity: 0;
+  transition: opacity 0.3s ease 0.1s;
+}
+.hp-disclosure-panel.is-open .hp-disclosure-content {
+  opacity: 1;
+}
+
+/* 8. Footer Links & Back-to-Top (footer.css: 0.2s ease-out / 0.2s ease-in-out) */
+.hp-footer-link {
+  text-decoration: underline transparent 1px;
+  text-underline-offset: 0.25rem;
+  transition: text-decoration-color 0.2s ease-out, color 0.2s ease-out;
+}
+.hp-footer-link:hover {
+  text-decoration-color: currentColor;
+}
+.hp-back-to-top {
+  transform: scale(0);
+  transition: transform 0.2s ease-in-out, background-color 0.2s ease-in-out;
+}
+.hp-back-to-top.is-visible {
+  transform: scale(1);
+}
+
+@keyframes slide-in-right {
+  from { transform: translateX(100%); }
+  to { transform: translateX(0); }
+}
+@keyframes fade-in {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+.drawer-in { animation: slide-in-right 220ms ease-out; }
+.fade-in { animation: fade-in 160ms ease-out; }
+
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  [data-cc-animate] { opacity: 1 !important; animation: none !important; }
+  .drawer-in, .fade-in, .hp-slide-timer { animation: none !important; }
+  * { transition-duration: 0.01ms !important; }
 }
