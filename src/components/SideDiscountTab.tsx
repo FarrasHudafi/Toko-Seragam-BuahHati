@@ -1,18 +1,16 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { CloseIcon, WhatsAppIcon } from "./Icons";
 import { SITE, waLink } from "@/lib/site";
 
 const KEY = "buahhati.sidetab.dismissed";
 
 export default function SideDiscountTab() {
-  const [visible, setVisible] = useState(false);
+  const [visible, setVisible] = useState(() =>
+    typeof window !== "undefined" ? sessionStorage.getItem(KEY) !== "1" : false,
+  );
   const [open, setOpen] = useState(false);
-
-  useEffect(() => {
-    setVisible(sessionStorage.getItem(KEY) !== "1");
-  }, []);
 
   if (!visible) return null;
 
