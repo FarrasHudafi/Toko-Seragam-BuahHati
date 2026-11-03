@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { useEffect, useState } from "react";
-import { BagIcon, ChevronDown, CloseIcon, MenuIcon, SearchIcon, TagIcon, UserIcon } from "./Icons";
+import { BagIcon, ChevronDown, CloseIcon, MenuIcon, SearchIcon } from "./Icons";
 import { CATEGORIES, TYPE_LABEL } from "@/data/catalog";
 import { SITE } from "@/lib/site";
 import { useStore } from "@/context/StoreContext";
@@ -28,12 +28,10 @@ const ANNOUNCEMENTS = [
 ];
 
 const NAV = [
-  { label: "Seragam Sekolah", href: "/koleksi/semua", mega: true },
-  { label: "Olahraga & Batik", href: "/koleksi/olahraga-batik" },
-  { label: "Atribut", href: "/koleksi/atribut" },
-  { label: "Promo", href: "/koleksi/promo", red: true },
-  { label: "Panduan Ukuran", href: "/panduan-ukuran" },
-  { label: "Tentang Kami", href: "/tentang-kami" },
+  { label: "Beranda", href: "/" },
+  { label: "Kategori", href: "/koleksi/semua", mega: true },
+  { label: "Ukuran", href: "/panduan-ukuran" },
+  { label: "Tentang", href: "/tentang-kami" },
   { label: "Kontak", href: "/kontak" },
 ];
 
@@ -69,20 +67,9 @@ export default function Header() {
         </p>
       </div>
 
-      <div className="hidden items-center justify-between px-8 pt-5 md:flex xl:px-16">
-        <p className="text-xs font-bold uppercase text-ink">Pembayaran mudah lewat WhatsApp, tanpa ribet</p>
-        <div className="flex items-center gap-6 text-ink">
-          <Link href="/akun" aria-label="Akun" className="transition-opacity duration-200 hover:opacity-60"><UserIcon className="h-6 w-6" /></Link>
-          <Link href="/wishlist" aria-label={`Wishlist, ${wishlist.length} produk`} className="relative transition-opacity duration-200 hover:opacity-60">
-            <TagIcon className="h-6 w-6" />
-            {wishlist.length > 0 && <span className="absolute -right-2 -top-2 grid h-4 min-w-4 place-items-center bg-ink px-1 text-[10px] font-bold text-white">{wishlist.length}</span>}
-          </Link>
-        </div>
-      </div>
-
-      <header className="sticky top-0 z-40 bg-white">
-        <div className="flex items-center justify-between px-4 py-3 md:px-8 xl:px-16">
-          <div className="flex items-center gap-8 xl:gap-12">
+      <header className="sticky top-0 z-40 bg-white shadow-sm">
+        <div className="flex items-center px-4 py-3 md:px-8 xl:px-16">
+          <div className="flex flex-1 items-center gap-4">
             <button type="button" className="md:hidden" aria-label="Buka menu" aria-expanded={mobile} onClick={() => setMobile(true)}>
               <MenuIcon className="h-6 w-6 text-ink" />
             </button>
@@ -92,8 +79,9 @@ export default function Header() {
                 Seragam<br className="hidden xl:block" /> Buah Hati
               </span>
             </Link>
+          </div>
 
-            <nav aria-label="Menu utama" className="hidden items-center gap-6 md:flex">
+          <nav aria-label="Menu utama" className="hidden items-center gap-6 md:flex">
               {NAV.map((item) =>
                 item.mega ? (
                   <div key={item.label} className="group static">
@@ -126,16 +114,15 @@ export default function Header() {
                   <Link
                     key={item.label}
                     href={item.href}
-                    className={`py-6 text-[15px] hover:underline underline-offset-8 ${item.red ? "text-red-600" : "text-ink"}`}
+                     className="py-6 text-[15px] text-ink hover:underline underline-offset-8"
                   >
                     {item.label}
                   </Link>
                 ),
               )}
             </nav>
-          </div>
 
-          <div className="flex items-center gap-5 text-ink">
+          <div className="flex flex-1 items-center justify-end gap-5 text-ink">
             <button type="button" aria-label="Cari produk" onClick={() => setSearchOpen(true)} className="transition-opacity duration-200 hover:opacity-60"><SearchIcon className="h-6 w-6" /></button>
             <button type="button" aria-label={`Tas belanja, ${totalQty} barang`} onClick={() => setCartOpen(true)} className="relative transition-opacity duration-200 hover:opacity-60">
               <BagIcon className="h-6 w-6" />
@@ -197,7 +184,7 @@ export default function Header() {
                   href={item.href}
                   tabIndex={mobile ? 0 : -1}
                   onClick={() => setMobile(false)}
-                  className={`block border-b border-neutral-100 py-4 text-base ${item.red ? "text-red-600" : ""}`}
+                   className="block border-b border-neutral-100 py-4 text-base"
                 >
                   {item.label}
                 </Link>
