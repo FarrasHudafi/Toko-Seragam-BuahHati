@@ -7,6 +7,7 @@ export interface CartLine { slug: string; color: string; size: string; qty: numb
 export interface ResolvedLine extends CartLine { product: Product }
 
 interface StoreValue {
+  ready: boolean;
   lines: ResolvedLine[];
   totalQty: number;
   subtotal: number;
@@ -29,26 +30,33 @@ const WISH_KEY = "buahhati.wishlist.v1";
 const same = (a: CartLine, slug: string, color: string, size: string) =>
   a.slug === slug && a.color === color && a.size === size;
 
-const readStorage = <T,>(key: string, fallback: T): T => {
-  if (typeof window === "undefined") return fallback;
-  try {
-    const raw = localStorage.getItem(key);
-    return raw ? (JSON.parse(raw) as T) : fallback;
-  } catch {
-    return fallback;
-  }
-};
-
 export function StoreProvider({ children }: { children: React.ReactNode }) {
-  const [cart, setCart] = useState<CartLine[]>(() => readStorage(CART_KEY, []));
-  const [wishlist, setWishlist] = useState<string[]>(() => readStorage(WISH_KEY, []));
+  const [cart, setCart] = useState<CartLine[]>([]);
+  const [wishlist, setWishlist] = useState<string[]>([]);
   const [cartOpen, setCartOpen] = useState(false);
   const [searchOpen, setSearchOpen] = useState(false);
+  const [ready, setReady] = useState(false);
 
   useEffect(() => {
+    try {
+      const c = localStorage.getItem(CART_KEY);
+      const w = localStorage.getItem(WISH_KEY);
+      if (c) {
+        // eslint-disable-next-line react-hooks/set-state-in-effect
+        setCart(JSON.parse(c));
+      }
+      if (w) setWishlist(JSON.parse(w));
+    } catch {
+      /* corrupted storage: start empty */
+    }
+    setReady(true);
+  }, []);
+
+  useEffect(() => {
+    if (!ready) return;
     localStorage.setItem(CART_KEY, JSON.stringify(cart));
     localStorage.setItem(WISH_KEY, JSON.stringify(wishlist));
-  }, [cart, wishlist]);
+  }, [cart, wishlist, ready]);
 
   const addToCart = useCallback((slug: string, color: string, size: string, qty = 1) => {
     setCart((prev) => {
@@ -78,6 +86,7 @@ export function StoreProvider({ children }: { children: React.ReactNode }) {
   const value = useMemo<StoreValue>(() => {
     const lines = cart.flatMap((l) => (PRODUCT_BY_SLUG[l.slug] ? [{ ...l, product: PRODUCT_BY_SLUG[l.slug] }] : []));
     return {
+      ready,
       lines,
       totalQty: lines.reduce((a, l) => a + l.qty, 0),
       subtotal: lines.reduce((a, l) => a + l.qty * l.product.price, 0),
@@ -92,7 +101,7 @@ export function StoreProvider({ children }: { children: React.ReactNode }) {
       searchOpen,
       setSearchOpen,
     };
-  }, [cart, wishlist, cartOpen, searchOpen, addToCart, setQty, removeLine, toggleWishlist]);
+  }, [cart, wishlist, ready, cartOpen, searchOpen, addToCart, setQty, removeLine, toggleWishlist]);
 
   return <Ctx.Provider value={value}>{children}</Ctx.Provider>;
 }

@@ -7,12 +7,14 @@ import { PRODUCT_BY_SLUG } from "@/data/catalog";
 import { useStore } from "@/context/StoreContext";
 
 export default function WishlistPage() {
-  const { wishlist } = useStore();
+  const { ready, wishlist } = useStore();
   const items = wishlist.flatMap((s) => (PRODUCT_BY_SLUG[s] ? [PRODUCT_BY_SLUG[s]] : []));
 
   return (
     <PageShell title="Wishlist" intro="Produk yang Anda simpan. Tersimpan di browser ini, belum terhubung ke akun.">
-      {items.length === 0 ? (
+      {!ready ? (
+        <p className="py-12 text-sm">Memuat wishlist...</p>
+      ) : items.length === 0 ? (
         <div className="py-16 text-center">
           <p className="font-display text-2xl font-extrabold">Belum ada produk tersimpan</p>
           <p className="mt-2 text-sm">Tekan ikon hati pada produk untuk menyimpannya di sini.</p>
