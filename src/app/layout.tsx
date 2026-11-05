@@ -1,5 +1,8 @@
 import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
+import { Geist } from "next/font/google";
+import ScrollReveal from "@/components/scroll-reveal";
+import SiteFooter from "@/components/site-footer";
+import SiteHeader from "@/components/site-header";
 import "./globals.css";
 
 const geistSans = Geist({
@@ -7,23 +10,23 @@ const geistSans = Geist({
   subsets: ["latin"],
 });
 
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
-  subsets: ["latin"],
-});
-
 export const metadata: Metadata = {
-  title: "Toko Seragam",
-  description: "Web store seragam",
+  title: {
+    template: "%s | Toko Seragam Buah Hati",
+    default: "Toko Seragam Buah Hati",
+  },
+  description: "Pilihan seragam sekolah dan panduan ukuran dari Toko Seragam Buah Hati.",
 };
 
 export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
-    <html
-      lang="en"
-      className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
-    >
-      <body className="min-h-full flex flex-col">{children}</body>
+    <html lang="id" className={geistSans.variable}>
+      <body>
+        <SiteHeader />
+        {children}
+        <SiteFooter />
+        <ScrollReveal />
+      </body>
     </html>
   );
 }
