@@ -138,20 +138,14 @@ export function searchProducts(q: string) {
   );
 }
 
-export const SIZE_TABLE = {
-  anak: [
-    { size: "24 - 26", chest: "34 - 36", length: "48 - 50", sleeve: "44 - 46", age: "6 - 8 tahun" },
-    { size: "28 - 30", chest: "38 - 40", length: "52 - 54", sleeve: "48 - 50", age: "9 - 11 tahun" },
-    { size: "32 - 34", chest: "42 - 44", length: "56 - 58", sleeve: "52 - 54", age: "12 tahun ke atas" },
-    { size: "36 - 38", chest: "46 - 48", length: "60 - 62", sleeve: "56 - 58", age: "13 - 15 tahun" },
-  ],
-  dewasa: [
-    { size: "S", chest: "48 - 50", length: "68 - 70", sleeve: "58 - 60", age: "Remaja / dewasa kecil" },
-    { size: "M", chest: "52 - 54", length: "71 - 73", sleeve: "60 - 62", age: "Dewasa standar" },
-    { size: "L", chest: "56 - 58", length: "74 - 76", sleeve: "62 - 64", age: "Dewasa besar" },
-    { size: "XL", chest: "60 - 62", length: "77 - 79", sleeve: "64 - 66", age: "Dewasa ekstra" },
-  ],
-};
+export type SizeRow = { size: string; chest: string; length: string; sleeve: string };
+
+export const SIZE_TABLE: SizeRow[] = [
+  { size: "S", chest: "34 - 36", length: "48 - 50", sleeve: "44 - 46" },
+  { size: "M", chest: "38 - 40", length: "52 - 54", sleeve: "48 - 50" },
+  { size: "L", chest: "42 - 44", length: "56 - 58", sleeve: "52 - 54" },
+  { size: "XL", chest: "46 - 48", length: "60 - 62", sleeve: "56 - 58" },
+];
 
 export const FAQS = [
   { question: "Bagaimana cara memilih ukuran seragam yang tepat?", answer: "Ukur lingkar dada, panjang baju dan panjang lengan anak, lalu cocokkan dengan Panduan Ukuran. Jika berada di antara dua ukuran, pilih yang lebih besar agar leluasa bergerak." },
