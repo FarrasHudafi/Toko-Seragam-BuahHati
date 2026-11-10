@@ -1,22 +1,27 @@
 "use client";
 
-import Link from "next/link";
-import { useState } from "react";
 import PageShell from "@/components/PageShell";
-import { RulerIcon, WhatsAppIcon } from "@/components/Icons";
+import { RulerIcon } from "@/components/Icons";
 import { SIZE_TABLE } from "@/data/catalog";
-import { waLink } from "@/lib/site";
 
-const STEPS = [
-  { n: "01", t: "Lingkar dada", d: "Lingkarkan pita ukur di bagian dada terlebar, melewati bawah ketiak. Pita mendatar dan tidak menekan." },
-  { n: "02", t: "Panjang baju", d: "Ukur dari titik bahu dekat leher sampai batas bawah baju yang diinginkan, anak berdiri tegak." },
-  { n: "03", t: "Panjang lengan", d: "Dari ujung bahu sampai pergelangan tangan. Untuk anak yang cepat tinggi, tambah 1 sampai 2 cm." },
+const POINTS = [
+  { n: "01", t: "Lingkar Dada", d: "Lingkarkan pita ukur di bagian dada terlebar, melewati bawah ketiak. Jaga pita tetap mendatar dan tidak menekan tubuh. Sisakan ruang gerak saat memilih ukuran pakaian." },
+  { n: "02", t: "Panjang Baju", d: "Ukur dari titik bahu dekat pangkal leher hingga batas bawah baju yang diinginkan. Anak berdiri tegak. Anda juga dapat mengukur baju yang sudah pas sebagai pembanding." },
+  { n: "03", t: "Panjang Lengan", d: "Dari titik pertemuan lengan dengan bahu hingga pergelangan tangan. Jika anak memiliki postur lebih tinggi, pertimbangkan untuk menambah 1 sampai 2 cm pada lengan." },
+];
+
+const TIPS = [
+  { t: "Pilih ukuran lebih besar", d: "Jika anak berada di batas antara dua ukuran, pilih ukuran yang lebih besar agar lebih nyaman digunakan sehari-hari." },
+  { t: "Ukur di atas pakaian tipis", d: "Jangan mengukur langsung pada kulit. Gunakan pita pengukur di atas kaos tipis untuk hasil yang lebih akurat." },
+  { t: "Toleransi 1 sampai 2 cm", d: "Perbedaan 1 sampai 2 cm antara ukuran tabel dan produk jadi adalah normal. Hal ini tergantung pada proses finishing kain." },
 ];
 
 export default function SizeGuidePage() {
-  const [tab, setTab] = useState<"anak" | "dewasa">("anak");
   return (
-    <PageShell title="Panduan Ukuran" intro="Gunakan pita ukur di atas pakaian tipis. Tabel ini panduan umum, hasil akhir bisa berbeda 1 sampai 2 cm tergantung bahan dan model.">
+    <PageShell
+      title="Panduan Ukuran"
+      intro="Pastikan ukuran seragam anak Anda pas nyaman. Gunakan pita pengukur di atas pakaian tipis untuk hasil akurat. Tabel di bawah ini merupakan panduan umum dan dapat berbeda-beda tergantung jenis bahan dan gaya potongan."
+    >
       <section aria-label="Cara mengukur" className="grid gap-10 border-t border-neutral-200 py-12 md:grid-cols-[1fr_1.2fr]">
         <div className="bg-soft p-6">
           <svg viewBox="0 0 200 260" className="mx-auto h-80" role="img" aria-label="Titik pengukuran: dada, panjang baju, lengan" fill="none" stroke="#111827" strokeWidth="2" strokeLinejoin="round">
@@ -31,7 +36,7 @@ export default function SizeGuidePage() {
           </svg>
         </div>
         <ol className="space-y-6">
-          {STEPS.map((s) => (
+          {POINTS.map((s) => (
             <li key={s.n} className="flex gap-5">
               <span className="font-display text-4xl font-black text-ink">{s.n}</span>
               <div>
@@ -45,41 +50,41 @@ export default function SizeGuidePage() {
 
       <section aria-label="Tabel ukuran" className="border-t border-neutral-200 py-12">
         <div className="flex flex-wrap items-center justify-between gap-4">
-          <h2 className="flex items-center gap-3 font-display text-3xl font-black"><RulerIcon className="h-7 w-7" /> Tabel Ukuran</h2>
-          <div className="flex gap-6 text-sm">
-            {(["anak", "dewasa"] as const).map((t) => (
-              <button key={t} onClick={() => setTab(t)} aria-pressed={tab === t} className={`border-b-2 pb-1 capitalize ${tab === t ? "border-ink font-bold text-ink" : "border-transparent text-muted"}`}>{t}</button>
-            ))}
+          <div>
+            <h2 className="flex items-center gap-3 font-display text-3xl font-black"><RulerIcon className="h-7 w-7" /> Tabel Ukuran Umum</h2>
+            <p className="mt-2 text-sm">Pilih kategori usia untuk melihat detail ukuran</p>
           </div>
         </div>
         <div className="mt-6 overflow-x-auto">
           <table className="w-full min-w-[560px] text-left text-sm">
-            <caption className="sr-only">Ukuran dalam sentimeter</caption>
+            <caption className="sr-only">Tabel ukuran umum dalam sentimeter</caption>
             <thead className="bg-soft text-xs uppercase text-ink">
-              <tr><th className="p-4">Ukuran</th><th className="p-4">Lebar dada (cm)</th><th className="p-4">Panjang baju (cm)</th><th className="p-4">Panjang lengan (cm)</th><th className="p-4">Usia</th></tr>
+              <tr><th className="p-4">Ukuran</th><th className="p-4">Lebar Dada (cm)</th><th className="p-4">Panjang Baju (cm)</th><th className="p-4">Panjang Lengan (cm)</th></tr>
             </thead>
             <tbody className="divide-y divide-neutral-200 text-ink">
-              {SIZE_TABLE[tab].map((r) => (
-                <tr key={r.size}><td className="p-4 font-bold">{r.size}</td><td className="p-4">{r.chest}</td><td className="p-4">{r.length}</td><td className="p-4">{r.sleeve}</td><td className="p-4 text-muted">{r.age}</td></tr>
+              {SIZE_TABLE.map((r) => (
+                <tr key={r.size}><td className="p-4 font-bold">{r.size}</td><td className="p-4">{r.chest}</td><td className="p-4">{r.length}</td><td className="p-4">{r.sleeve}</td></tr>
               ))}
             </tbody>
           </table>
         </div>
-        <ul className="mt-6 grid gap-4 text-sm md:grid-cols-3">
-          <li><strong className="text-ink">Di antara dua ukuran?</strong> Pilih yang lebih besar agar leluasa bergerak.</li>
-          <li><strong className="text-ink">Ukur di atas pakaian tipis.</strong> Jangan langsung pada kulit.</li>
-          <li><strong className="text-ink">Toleransi 1 sampai 2 cm.</strong> Normal akibat proses jahit dan kain.</li>
-        </ul>
+        <p className="mt-6 max-w-3xl text-sm leading-relaxed text-body">
+          <span className="font-bold text-ink">Catatan:</span> panduan umum untuk baju lengan panjang. Lebar dada diukur mendatar dari ketiak ke ketiak pada pakaian; nilainya setengah lingkar dada pakaian, bukan tubuh. Pilih lingkar dada pakaian yang lebih besar dari tubuh agar leluasa. Usia hanya perkiraan.
+        </p>
       </section>
 
-      <section className="flex flex-col items-start justify-between gap-5 bg-brand-soft p-8 md:flex-row md:items-center">
-        <div>
-          <h2 className="font-display text-3xl font-black">Masih ragu dengan ukurannya?</h2>
-          <p className="mt-1 text-ink">Kirim tinggi dan berat anak, kami bantu pilihkan.</p>
+      <section aria-label="Tips pemilihan ukuran" className="border-t border-neutral-200 py-12">
+        <h2 className="font-display text-3xl font-black">Tips Pemilihan Ukuran</h2>
+        <div className="mt-8 grid gap-6 lg:grid-cols-3">
+          {TIPS.map((t) => (
+            <article key={t.t} className="border border-neutral-200 p-6">
+              <h3 className="font-display text-xl font-extrabold text-ink">{t.t}</h3>
+              <p className="mt-3 text-sm leading-relaxed text-body">{t.d}</p>
+            </article>
+          ))}
         </div>
-        <a href={waLink("Halo, saya butuh bantuan memilih ukuran seragam.")} target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 bg-ink px-8 py-4 text-xs font-bold uppercase text-white hover:bg-neutral-800"><WhatsAppIcon className="h-5 w-5" /> Tanya ukuran</a>
       </section>
-      <p className="mt-6 text-sm"><Link href="/koleksi/semua" className="underline underline-offset-4">Lihat semua seragam</Link></p>
+
     </PageShell>
   );
 }
