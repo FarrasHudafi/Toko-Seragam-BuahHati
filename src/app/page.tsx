@@ -95,7 +95,7 @@ export default function Home() {
   return (
     <>
       <section className="bg-white" aria-label="Pengantar toko">
-        <div className="mx-auto grid max-w-[1440px] items-center gap-10 px-4 py-14 md:grid-cols-[5fr_7fr] md:px-8 xl:px-16">
+        <div className="mx-auto grid max-w-360 items-center gap-10 px-4 py-14 md:grid-cols-[5fr_7fr] md:px-8 xl:px-16">
           <motion.div
             initial="hidden"
             animate="visible"
@@ -103,7 +103,7 @@ export default function Home() {
             className="flex flex-col items-center text-center md:items-start md:text-left"
           >
             <motion.h1
-              variants={fadeUp}
+              variants={variants}
               className="font-display text-4xl font-black leading-[1.02] text-ink md:text-6xl"
             >
               Seragam rapi, nyaman dipakai seharian.
@@ -137,22 +137,22 @@ export default function Home() {
             initial="hidden"
             animate="visible"
             variants={variants}
-            className="relative aspect-square max-h-[720px] overflow-hidden"
+            className="relative aspect-square overflow-hidden md:aspect-auto md:h-[max(320px,calc(100dvh-190px))] md:max-h-180"
           >
             <Image
               src="/images/Hero Image.png"
               alt="Siswa mengenakan seragam sekolah"
               fill
               priority
-              sizes="(max-width: 768px) 100vw, 50vw"
-              className="object-contain object-right"
+              sizes="(max-width: 768px) calc(100vw - 2rem), 50vw"
+              className="object-contain object-center md:object-right"
             />
           </motion.div>
         </div>
       </section>
 
       <section
-        className="mx-auto max-w-[1440px] px-4 py-10 md:px-8 xl:px-16"
+        className="mx-auto max-w-360 px-4 py-10 md:px-8 xl:px-16"
         aria-label="Belanja per kategori"
       >
         <motion.div
@@ -184,7 +184,7 @@ export default function Home() {
                 href={`/koleksi/${c.id}`}
                 className="group block border border-neutral-200"
               >
-                <span className="block aspect-[4/3] overflow-hidden bg-soft">
+                <span className="block aspect-4/3 overflow-hidden bg-soft">
                   <span className="hp-tile-media relative block h-full w-full">
                     {CATEGORY_IMAGES[c.id] ? (
                       <Image
@@ -219,7 +219,7 @@ export default function Home() {
 
       <div className="space-y-20 pt-16">
         <section
-          className="mx-auto max-w-[1440px] px-4 md:px-8 xl:px-16"
+          className="mx-auto max-w-360 px-4 md:px-8 xl:px-16"
           aria-label="Produk unggulan"
         >
           <motion.div
@@ -276,7 +276,7 @@ export default function Home() {
         </section>
 
         <section
-          className="mx-auto max-w-[1440px] px-4 md:px-8 xl:px-16"
+          className="mx-auto max-w-360 px-4 md:px-8 xl:px-16"
           aria-label="Kenapa beli di sini"
         >
           <motion.h2
@@ -334,7 +334,7 @@ export default function Home() {
         </section>
 
         <section
-          className="mx-auto max-w-[1440px] px-4 md:px-8 xl:px-16"
+          className="mx-auto max-w-360 px-4 md:px-8 xl:px-16"
           aria-label="Ukuran"
         >
           <div className="grid gap-8 md:grid-cols-2 md:items-stretch">
@@ -395,7 +395,7 @@ export default function Home() {
         </section>
 
         <section
-          className="mx-auto max-w-[1440px] px-4 md:px-8 xl:px-16"
+          className="mx-auto max-w-360 px-4 md:px-8 xl:px-16"
           aria-label="Testimoni"
         >
           <motion.h2

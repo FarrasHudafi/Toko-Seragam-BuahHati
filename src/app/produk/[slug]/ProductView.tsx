@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { useState } from "react";
+import { useId, useState } from "react";
 import ProductCarousel from "@/components/ProductCarousel";
 import ProductImage from "@/components/ProductImage";
 import SizeChartModal from "@/components/SizeChartModal";
@@ -45,6 +45,8 @@ export default function ProductView({ product }: { product: Product }) {
   const [chart, setChart] = useState(false);
   const [tab, setTab] = useState<"detail" | "ulasan">("detail");
   const [hint, setHint] = useState(false);
+  const sizeHintId = useId();
+  const sizeMissing = hint && !size;
 
   const cat = CATEGORIES.find((c) => c.id === product.categoryId)!;
   const pct = discountPercent(product);
@@ -118,7 +120,7 @@ export default function ProductView({ product }: { product: Product }) {
               <p className="text-ink">Ukuran: <span className="font-bold">{size ?? "pilih ukuran"}</span></p>
               <button type="button" onClick={() => setChart(true)} className="flex items-center gap-2 text-ink underline underline-offset-4"><RulerIcon className="h-5 w-5" /> Tabel ukuran</button>
             </div>
-            <div className="mt-2 flex flex-wrap gap-2" role="radiogroup" aria-label="Ukuran">
+            <div className="mt-2 flex flex-wrap gap-2" role="radiogroup" aria-label="Ukuran" aria-describedby={sizeMissing ? sizeHintId : undefined}>
               {product.sizes.map((s) => {
                 const out = product.soldOut?.includes(s);
                 return (
@@ -128,7 +130,7 @@ export default function ProductView({ product }: { product: Product }) {
                 );
               })}
             </div>
-            {hint && needsSize && <p role="alert" className="mt-2 text-sm text-promo">Pilih ukuran dulu sebelum menambah ke tas.</p>}
+            {hint && needsSize && <p id={sizeHintId} role="alert" className="mt-2 text-sm text-promo">Pilih ukuran dulu sebelum menambah ke tas.</p>}
             {product.soldOut && <p className="mt-2 text-xs text-muted">Ukuran bercoret sedang habis. Tanyakan admin untuk estimasi stok.</p>}
           </div>
 

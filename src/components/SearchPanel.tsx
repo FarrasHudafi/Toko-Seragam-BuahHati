@@ -1,12 +1,13 @@
 "use client";
 
 import Link from "next/link";
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useMemo, useRef, useState } from "react";
 import { CloseIcon, SearchIcon } from "./Icons";
 import ProductImage from "./ProductImage";
 import { CATEGORIES, searchProducts } from "@/data/catalog";
 import { formatRupiah } from "@/lib/site";
 import { useStore } from "@/context/StoreContext";
+import useDialog from "@/lib/useDialog";
 
 export default function SearchPanel() {
   const { searchOpen, setSearchOpen } = useStore();
@@ -15,13 +16,7 @@ export default function SearchPanel() {
   const results = useMemo(() => searchProducts(q).slice(0, 6), [q]);
   const total = useMemo(() => searchProducts(q).length, [q]);
 
-  useEffect(() => {
-    if (!searchOpen) return;
-    inputRef.current?.focus();
-    const onKey = (e: KeyboardEvent) => e.key === "Escape" && setSearchOpen(false);
-    window.addEventListener("keydown", onKey);
-    return () => window.removeEventListener("keydown", onKey);
-  }, [searchOpen, setSearchOpen]);
+  const panelRef = useDialog<HTMLDivElement>(searchOpen, () => setSearchOpen(false), inputRef);
 
   const close = () => setSearchOpen(false);
 
@@ -41,13 +36,16 @@ export default function SearchPanel() {
         onClick={close}
       />
       <div
-        className={`hp-search-panel absolute inset-x-0 top-0 max-h-[90vh] overflow-y-auto bg-white shadow-[0_12px_24px_-12px_rgba(0,0,0,0.35)] transition-all duration-400 ease-[cubic-bezier(0.19,1,0.22,1)] ${searchOpen ? "is-open visible translate-y-0 opacity-100" : "invisible -translate-y-6 opacity-0"}`}
+        ref={panelRef}
+        tabIndex={-1}
+        className={`hp-search-panel absolute inset-x-0 top-0 max-h-[90vh] overflow-y-auto bg-white shadow-[0_12px_24px_-12px_rgba(0,0,0,0.35)] outline-none transition-all duration-400 ease-[cubic-bezier(0.19,1,0.22,1)] ${searchOpen ? "is-open visible translate-y-0 opacity-100" : "invisible -translate-y-6 opacity-0"}`}
       >
         <form action="/koleksi/semua" className="mx-auto flex max-w-4xl items-center gap-4 px-4 py-5">
           <SearchIcon className="h-6 w-6 shrink-0 text-ink" />
           <input
             ref={inputRef}
             name="q"
+            aria-label="Cari produk"
             value={q}
             tabIndex={searchOpen ? 0 : -1}
             onChange={(e) => setQ(e.target.value)}

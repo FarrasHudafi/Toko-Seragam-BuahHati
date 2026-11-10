@@ -19,6 +19,19 @@ bun dev
 
 Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
 
+### Test on a phone
+
+Run `npm run dev -- --hostname 0.0.0.0`, then open `http://<laptop-ip>:3000`
+on a phone connected to the same network. Set the laptop IP in the local,
+Git-ignored `.env.local` file before starting the server:
+
+```bash
+NEXT_DEV_ALLOWED_ORIGINS=192.168.1.10
+```
+
+Replace the example IP with your own. Multiple comma-separated IPs are allowed;
+do not use a wildcard. This setting affects only the Next.js development server.
+
 You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
 
 This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.

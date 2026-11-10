@@ -1,22 +1,17 @@
 "use client";
 
 import Link from "next/link";
-import { useEffect } from "react";
 import { CloseIcon, MinusIcon, PlusIcon, TruckIcon, WhatsAppIcon } from "./Icons";
 import ProductImage from "./ProductImage";
 import { useStore } from "@/context/StoreContext";
+import useDialog from "@/lib/useDialog";
 import { formatRupiah, SITE } from "@/lib/site";
 import { orderLink } from "@/lib/order";
 
 export default function CartDrawer() {
   const { cartOpen, setCartOpen, lines, totalQty, subtotal, setQty, removeLine } = useStore();
 
-  useEffect(() => {
-    if (!cartOpen) return;
-    const onKey = (e: KeyboardEvent) => e.key === "Escape" && setCartOpen(false);
-    window.addEventListener("keydown", onKey);
-    return () => window.removeEventListener("keydown", onKey);
-  }, [cartOpen, setCartOpen]);
+  const panelRef = useDialog<HTMLElement>(cartOpen, () => setCartOpen(false));
 
   const close = () => setCartOpen(false);
   const remaining = Math.max(0, SITE.freeShippingMinQty - totalQty);
@@ -37,7 +32,9 @@ export default function CartDrawer() {
         onClick={close}
       />
       <aside
-        className={`hp-drawer-right absolute inset-y-0 right-0 flex w-full max-w-md flex-col bg-white shadow-[-12px_0_24px_-12px_rgba(0,0,0,0.35)] transition-transform duration-700 ease-[cubic-bezier(0.19,1,0.22,1)] ${cartOpen ? "is-open visible translate-x-0" : "invisible translate-x-full"}`}
+        ref={panelRef}
+        tabIndex={-1}
+        className={`hp-drawer-right absolute inset-y-0 right-0 flex w-full max-w-md flex-col bg-white outline-none shadow-[-12px_0_24px_-12px_rgba(0,0,0,0.35)] transition-transform duration-700 ease-[cubic-bezier(0.19,1,0.22,1)] ${cartOpen ? "is-open visible translate-x-0" : "invisible translate-x-full"}`}
       >
         <div className="flex items-center justify-between border-b border-neutral-200 px-5 py-4">
           <h2 className="font-display text-xl font-extrabold">Tas Belanja ({totalQty})</h2>

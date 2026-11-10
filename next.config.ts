@@ -1,7 +1,13 @@
 import type { NextConfig } from "next";
 
+const allowedDevOrigins = process.env.NEXT_DEV_ALLOWED_ORIGINS
+  ?.split(",")
+  .map((origin) => origin.trim())
+  .filter(Boolean);
+
 const nextConfig: NextConfig = {
-  /* config options here */
+  // Allow the phone on the same LAN to load development assets.
+  allowedDevOrigins,
   experimental: {
     agentFeedback: true,
   },

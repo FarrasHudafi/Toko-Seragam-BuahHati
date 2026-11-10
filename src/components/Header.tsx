@@ -6,6 +6,7 @@ import { BagIcon, ChevronDown, CloseIcon, MenuIcon, SearchIcon } from "./Icons";
 import { CATEGORIES, TYPE_LABEL } from "@/data/catalog";
 import { SITE } from "@/lib/site";
 import { useStore } from "@/context/StoreContext";
+import useDialog from "@/lib/useDialog";
 
 const uniformCats = CATEGORIES.filter((c) => ["sd", "smp", "sma", "pramuka"].includes(c.id));
 
@@ -41,6 +42,8 @@ export default function Header() {
   const [mobileSub, setMobileSub] = useState(false);
   const [annIdx, setAnnIdx] = useState(0);
   const [annPaused, setAnnPaused] = useState(false);
+  const closeMobile = () => setMobile(false);
+  const mobileRef = useDialog<HTMLDivElement>(mobile, closeMobile);
 
   useEffect(() => {
     if (annPaused || window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
@@ -147,7 +150,9 @@ export default function Header() {
           onClick={() => setMobile(false)}
         />
         <div
-          className={`hp-drawer-left absolute inset-y-0 left-0 flex w-[85%] max-w-sm flex-col bg-white transition-transform duration-700 ease-[cubic-bezier(0.19,1,0.22,1)] ${mobile ? "is-open visible translate-x-0" : "invisible -translate-x-full"}`}
+          ref={mobileRef}
+          tabIndex={-1}
+          className={`hp-drawer-left absolute inset-y-0 left-0 flex w-[85%] max-w-sm flex-col bg-white outline-none transition-transform duration-700 ease-[cubic-bezier(0.19,1,0.22,1)] ${mobile ? "is-open visible translate-x-0" : "invisible -translate-x-full"}`}
         >
           <div className="flex items-center justify-between border-b border-neutral-200 px-5 py-4">
             <span className="font-display text-lg font-extrabold text-ink">Menu</span>

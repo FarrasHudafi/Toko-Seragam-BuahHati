@@ -10,6 +10,7 @@ import {
   type Gender, type GarmentType, type Product,
 } from "@/data/catalog";
 import { formatRupiah, waLink } from "@/lib/site";
+import useDialog from "@/lib/useDialog";
 
 const PAGE = 12;
 const ALL_COLORS = Array.from(new Map(PRODUCTS.flatMap((p) => p.colors).map((c) => [c.name, c])).values());
@@ -80,8 +81,10 @@ function CollectionView({ slug, q, tipe, warna }: { slug: string; q: string; tip
   const [max, setMax] = useState(MAX_PRICE);
   const [sort, setSort] = useState<Sort>("baru");
   const [list, setList] = useState(false);
-  const [limit, setLimit] = useState(PAGE);
+  const [pagination, setPagination] = useState({ key: "", limit: PAGE });
   const [drawer, setDrawer] = useState(false);
+  const closeDrawer = () => setDrawer(false);
+  const drawerRef = useDialog<HTMLDivElement>(drawer, closeDrawer);
 
   const base = useMemo<Product[]>(() => {
     if (q) return searchProducts(q);
@@ -119,7 +122,10 @@ function CollectionView({ slug, q, tipe, warna }: { slug: string; q: string; tip
   const catCount = count((p) => p.categoryId);
 
   const active = colors.size + sizes.size + genders.size + types.size + cats.size + (min > 0 || max < MAX_PRICE ? 1 : 0);
-  const reset = () => { setColors(new Set()); setSizes(new Set()); setGenders(new Set()); setTypes(new Set()); setCats(new Set()); setMin(0); setMax(MAX_PRICE); };
+  const paginationKey = JSON.stringify([slug, q, [...colors], [...sizes], [...genders], [...types], [...cats], min, max, sort]);
+  const limit = pagination.key === paginationKey ? pagination.limit : PAGE;
+  const showMore = () => setPagination({ key: paginationKey, limit: limit + PAGE });
+  const reset = () => { setColors(new Set()); setSizes(new Set()); setGenders(new Set()); setTypes(new Set()); setCats(new Set()); setMin(0); setMax(MAX_PRICE); setPagination({ key: "", limit: PAGE }); };
   const title = q ? `Hasil untuk "${q}"` : slug === "promo" ? "Promo" : cat ? cat.name : "Semua Seragam";
 
   const filters = (
@@ -200,7 +206,7 @@ function CollectionView({ slug, q, tipe, warna }: { slug: string; q: string; tip
             <button type="button" aria-label="Tampilan daftar" aria-pressed={list} onClick={() => setList(true)} className={list ? "text-ink" : "text-muted"}><ListIcon className="h-5 w-5" /></button>
             <button type="button" aria-label="Tampilan grid" aria-pressed={!list} onClick={() => setList(false)} className={!list ? "text-ink" : "text-muted"}><GridIcon className="h-5 w-5" /></button>
           </span>
-          <button type="button" onClick={() => setDrawer(true)} className="border border-ink px-4 py-2 font-bold uppercase text-ink md:hidden">Filter{active ? ` (${active})` : ""}</button>
+          <button type="button" aria-expanded={drawer} aria-controls="mobile-filters" onClick={() => setDrawer(true)} className="border border-ink px-4 py-2 font-bold uppercase text-ink md:hidden">Filter{active ? ` (${active})` : ""}</button>
         </div>
       </div>
 
@@ -247,7 +253,7 @@ function CollectionView({ slug, q, tipe, warna }: { slug: string; q: string; tip
           {result.length > limit && (
             <div className="mt-12 text-center">
               <p className="mb-3 text-xs text-muted">Menampilkan {limit} dari {result.length} produk</p>
-              <button type="button" onClick={() => setLimit(limit + PAGE)} className="hp-btn-secondary inline-flex items-center gap-2 border border-ink px-8 py-3 text-xs font-bold uppercase text-ink">
+              <button type="button" onClick={showMore} className="hp-btn-secondary inline-flex items-center gap-2 border border-ink px-8 py-3 text-xs font-bold uppercase text-ink">
                 Tampilkan lebih banyak <ChevronDown className="h-4 w-4" />
               </button>
             </div>
@@ -256,6 +262,7 @@ function CollectionView({ slug, q, tipe, warna }: { slug: string; q: string; tip
       </div>
 
       <div
+        id="mobile-filters"
         className={`fixed inset-0 z-50 md:hidden ${drawer ? "visible pointer-events-auto" : "invisible pointer-events-none"}`}
         role="dialog"
         aria-modal="true"
@@ -269,7 +276,7 @@ function CollectionView({ slug, q, tipe, warna }: { slug: string; q: string; tip
           tabIndex={drawer ? 0 : -1}
           onClick={() => setDrawer(false)}
         />
-        <div className={`hp-drawer-right absolute inset-y-0 right-0 flex w-[88%] max-w-sm flex-col bg-white transition-transform duration-700 ease-[cubic-bezier(0.19,1,0.22,1)] ${drawer ? "is-open visible translate-x-0" : "invisible translate-x-full"}`}>
+        <div ref={drawerRef} tabIndex={-1} className={`hp-drawer-right absolute inset-y-0 right-0 flex w-[88%] max-w-sm flex-col bg-white outline-none transition-transform duration-700 ease-[cubic-bezier(0.19,1,0.22,1)] ${drawer ? "is-open visible translate-x-0" : "invisible translate-x-full"}`}>
           <div className="flex items-center justify-between border-b border-neutral-200 px-5 py-4">
             <span className="font-display text-xl font-extrabold">Filter</span>
             <button type="button" aria-label="Tutup" tabIndex={drawer ? 0 : -1} onClick={() => setDrawer(false)}><CloseIcon className="h-6 w-6" /></button>
