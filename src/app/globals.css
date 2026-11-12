@@ -102,6 +102,46 @@ h1, h2, h3 {
   background: transparent;
 }
 
+/* Green themed handles for the SD category price slider. */
+.dual-range.sd input[type="range"]::-webkit-slider-thumb {
+  background: #1f4a3b;
+  border-color: #1f4a3b;
+}
+.dual-range.sd input[type="range"]::-moz-range-thumb {
+  background: #1f4a3b;
+  border-color: #1f4a3b;
+}
+
+/* Blue themed handles for the SMP category price slider. */
+.dual-range.smp input[type="range"]::-webkit-slider-thumb {
+  background: #1d4e89;
+  border-color: #1d4e89;
+}
+.dual-range.smp input[type="range"]::-moz-range-thumb {
+  background: #1d4e89;
+  border-color: #1d4e89;
+}
+
+/* Gray themed handles for the SMA category price slider. */
+.dual-range.sma input[type="range"]::-webkit-slider-thumb {
+  background: #6b7280;
+  border-color: #6b7280;
+}
+.dual-range.sma input[type="range"]::-moz-range-thumb {
+  background: #6b7280;
+  border-color: #6b7280;
+}
+
+/* Brown themed handles for the Pramuka category price slider. */
+.dual-range.pramuka input[type="range"]::-webkit-slider-thumb {
+  background: #8b5a2b;
+  border-color: #8b5a2b;
+}
+.dual-range.pramuka input[type="range"]::-moz-range-thumb {
+  background: #8b5a2b;
+  border-color: #8b5a2b;
+}
+
 /* ==========================================================================
    Hush Puppies Reference Animations (animate-on-scroll, slideshow, drawers,
    product cards, multi-column tiles, disclosures, buttons, footer)

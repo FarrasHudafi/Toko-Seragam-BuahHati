@@ -43,7 +43,7 @@ export default function SearchPanel() {
       <div
         className={`hp-search-panel absolute inset-x-0 top-0 max-h-[90vh] overflow-y-auto bg-white shadow-[0_12px_24px_-12px_rgba(0,0,0,0.35)] transition-all duration-400 ease-[cubic-bezier(0.19,1,0.22,1)] ${searchOpen ? "is-open visible translate-y-0 opacity-100" : "invisible -translate-y-6 opacity-0"}`}
       >
-        <form action="/koleksi/semua" className="mx-auto flex max-w-4xl items-center gap-4 px-4 py-5">
+        <form action="/kategori/semua" className="mx-auto flex max-w-4xl items-center gap-4 px-4 py-5">
           <SearchIcon className="h-6 w-6 shrink-0 text-ink" />
           <input
             ref={inputRef}
@@ -64,7 +64,7 @@ export default function SearchPanel() {
               <p className="mb-3 text-xs font-bold uppercase text-ink">Pencarian populer</p>
               <div className="flex flex-wrap gap-2">
                 {CATEGORIES.map((c) => (
-                  <Link key={c.id} href={`/koleksi/${c.id}`} tabIndex={searchOpen ? 0 : -1} onClick={close} className="hp-opt-label border border-neutral-300 px-4 py-2 text-sm text-ink transition-colors duration-500 hover:border-ink">{c.name}</Link>
+                  <Link key={c.id} href={`/kategori/${c.id}`} tabIndex={searchOpen ? 0 : -1} onClick={close} className="hp-opt-label border border-neutral-300 px-4 py-2 text-sm text-ink transition-colors duration-500 hover:border-ink">{c.name}</Link>
                 ))}
               </div>
             </div>
@@ -83,7 +83,7 @@ export default function SearchPanel() {
                   </li>
                 ))}
               </ul>
-              <Link href={`/koleksi/semua?q=${encodeURIComponent(q)}`} tabIndex={searchOpen ? 0 : -1} onClick={close} className="mt-4 inline-block text-sm font-bold text-ink underline underline-offset-4">
+              <Link href={`/kategori/semua?q=${encodeURIComponent(q)}`} tabIndex={searchOpen ? 0 : -1} onClick={close} className="mt-4 inline-block text-sm font-bold text-ink underline underline-offset-4">
                 Lihat {total} hasil
               </Link>
             </>

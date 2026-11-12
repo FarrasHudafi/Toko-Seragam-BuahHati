@@ -23,22 +23,22 @@ export default function Footer() {
           </h4>
           <ul className="mt-4 space-y-3 text-sm text-muted">
             <li>
-              <Link href="/koleksi/sd" className="hover:text-ink">
+              <Link href="/kategori/sd" className="hover:text-ink">
                 SD
               </Link>
             </li>
             <li>
-              <Link href="/koleksi/smp" className="hover:text-ink">
+              <Link href="/kategori/smp" className="hover:text-ink">
                 SMP
               </Link>
             </li>
             <li>
-              <Link href="/koleksi/sma" className="hover:text-ink">
+              <Link href="/kategori/sma" className="hover:text-ink">
                 SMA
               </Link>
             </li>
             <li>
-              <Link href="/koleksi/pramuka" className="hover:text-ink">
+              <Link href="/kategori/pramuka" className="hover:text-ink">
                 Pramuka
               </Link>
             </li>

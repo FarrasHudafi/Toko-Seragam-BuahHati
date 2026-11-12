@@ -44,7 +44,7 @@ const FEATURED = [
   {
     slug: "kemeja-sd-putih-lengan-pendek",
     name: "Seragam SD Putih",
-    image: "/images/Frame produk unggulan sd.png",
+    image: "/images/Frame produk unggulan sd-original.png",
   },
   {
     slug: "celana-panjang-biru-smp",
@@ -120,16 +120,10 @@ export default function Home() {
               className="mt-10 flex flex-wrap justify-center gap-4 md:justify-start"
             >
               <Link
-                href="/koleksi/semua"
-                className="border border-ink px-8 py-3.5 text-sm font-bold uppercase tracking-wide text-ink transition-colors duration-200 hover:bg-ink hover:text-white"
+                href="/kategori/semua"
+                className="border border-ink px-8 py-3.5 text-sm font-bold uppercase tracking-wide text-ink transition-colors duration-200 hover:bg-ink hover:text-white rounded-lg"
               >
                 Lihat Koleksi
-              </Link>
-              <Link
-                href="/kontak"
-                className="bg-ink px-8 py-3.5 text-sm font-bold uppercase tracking-wide text-white transition-opacity duration-200 hover:opacity-80"
-              >
-                Pesan Partai/Sekolah
               </Link>
             </motion.div>
           </motion.div>
@@ -137,7 +131,7 @@ export default function Home() {
             initial="hidden"
             animate="visible"
             variants={variants}
-            className="relative aspect-square max-h-[720px] overflow-hidden"
+            className="relative aspect-square max-h-[720px] overflow-hidden rounded-xl"
           >
             <Image
               src="/images/Hero Image.png"
@@ -181,8 +175,8 @@ export default function Home() {
               custom={i}
             >
               <Link
-                href={`/koleksi/${c.id}`}
-                className="group block border border-neutral-200"
+                href={`/kategori/${c.id}`}
+                className="group block overflow-hidden rounded-xl border border-neutral-200"
               >
                 <span className="block aspect-[4/3] overflow-hidden bg-soft">
                   <span className="hp-tile-media relative block h-full w-full">
@@ -249,14 +243,14 @@ export default function Home() {
                   variants={itemVariants}
                   custom={i}
                 >
-                  <Link href={`/produk/${f.slug}`} className="group block">
-                    <span className="relative block aspect-square overflow-hidden bg-soft">
+                  <Link href={`/produk/${f.slug}`} className="group block overflow-hidden rounded-xl">
+                    <span className="relative block aspect-square overflow-hidden rounded-xl bg-soft">
                       <Image
                         src={f.image}
                         alt={f.name}
                         fill
                         sizes="25vw"
-                        className="object-contain transition-transform duration-500 group-hover:scale-105"
+                        className="object-cover transition-transform duration-500 group-hover:scale-105"
                       />
                     </span>
                     <span className="mt-3 block font-display text-lg font-extrabold text-ink group-hover:underline underline-offset-4">
@@ -322,7 +316,7 @@ export default function Home() {
                 viewport={viewport}
                 variants={itemVariants}
                 custom={i}
-                className="flex flex-col items-center gap-3 border border-neutral-200 bg-soft p-10 text-center"
+                className="flex flex-col items-center gap-3 rounded-xl border border-neutral-200 bg-soft p-10 text-center"
               >
                 <span className="font-display text-2xl font-black">
                   {item.title}
@@ -364,7 +358,7 @@ export default function Home() {
               whileInView="visible"
               viewport={viewport}
               variants={variants}
-              className="flex w-full flex-col justify-center overflow-hidden border border-neutral-200"
+              className="flex w-full flex-col justify-center overflow-hidden rounded-xl border border-neutral-200"
             >
               <table className="w-full text-center text-sm">
                 <thead className="bg-soft">
@@ -416,7 +410,7 @@ export default function Home() {
                 viewport={viewport}
                 variants={itemVariants}
                 custom={i}
-                className="flex flex-col border border-neutral-200 p-8"
+                className="flex flex-col rounded-xl border border-neutral-200 p-8"
               >
                 <p className="flex-1 text-sm leading-relaxed">
                   {"\u201C"}
