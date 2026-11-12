@@ -24,7 +24,7 @@ export default function CartPage() {
         <div className="py-16 text-center">
           <p className="font-display text-2xl font-extrabold">Tas Anda masih kosong</p>
           <p className="mt-2 text-sm">Pilih seragam, tentukan warna dan ukuran, lalu tambahkan ke tas.</p>
-          <Link href="/koleksi/semua" className="hp-btn-primary mt-6 inline-block bg-ink px-10 py-4 text-xs font-bold uppercase text-white hover:bg-neutral-800">Mulai belanja</Link>
+          <Link href="/kategori/semua" className="hp-btn-primary mt-6 inline-block bg-ink px-10 py-4 text-xs font-bold uppercase text-white hover:bg-neutral-800">Mulai belanja</Link>
         </div>
       ) : (
         <div className="grid gap-12 lg:grid-cols-[1.4fr_1fr]">
@@ -53,7 +53,7 @@ export default function CartPage() {
               ))}
             </ul>
             <div className="mt-4 flex items-center justify-between text-sm">
-              <Link href="/koleksi/semua" className="underline underline-offset-4 hover:text-ink">Lanjut belanja</Link>
+              <Link href="/kategori/semua" className="underline underline-offset-4 hover:text-ink">Lanjut belanja</Link>
               <button onClick={clearCart} className="text-muted underline underline-offset-4 hover:text-ink">Kosongkan tas</button>
             </div>
           </section>

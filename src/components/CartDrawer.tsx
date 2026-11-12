@@ -57,7 +57,7 @@ export default function CartDrawer() {
           <div className={`hp-drawer-content flex flex-1 flex-col items-center justify-center gap-4 px-8 text-center transition-opacity duration-600 ${cartOpen ? "opacity-100" : "opacity-0"}`}>
             <p className="font-display text-xl font-extrabold">Tas Anda masih kosong</p>
             <p className="text-sm">Pilih seragam, tentukan warna dan ukuran, lalu tambahkan ke tas.</p>
-            <Link href="/koleksi/semua" tabIndex={cartOpen ? 0 : -1} onClick={close} className="hp-btn-primary bg-ink px-8 py-3 text-xs font-bold uppercase text-white hover:bg-neutral-800">
+            <Link href="/kategori/semua" tabIndex={cartOpen ? 0 : -1} onClick={close} className="hp-btn-primary bg-ink px-8 py-3 text-xs font-bold uppercase text-white hover:bg-neutral-800">
               Mulai belanja
             </Link>
           </div>

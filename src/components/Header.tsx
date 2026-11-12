@@ -9,6 +9,9 @@ import { useStore } from "@/context/StoreContext";
 
 const uniformCats = CATEGORIES.filter((c) => ["sd", "smp", "sma", "pramuka"].includes(c.id));
 
+/* Semua link kategori navbar mengarah ke /kategori/[slug]; SD memakai halaman khusus, sisanya route dinamis. */
+const catHref = (id: string) => `/kategori/${id}`;
+
 const ANNOUNCEMENTS = [
   {
     text: `Gratis ongkir untuk pesanan sekolah minimal ${SITE.freeShippingMinQty} pcs.`,
@@ -18,7 +21,7 @@ const ANNOUNCEMENTS = [
   {
     text: "Paket seragam tahun ajaran baru hemat s.d. 15% untuk produk pilihan.",
     cta: "Lihat promo",
-    href: "/koleksi/promo",
+    href: "/kategori/promo",
   },
   {
     text: "Bingung pilih nomor seragam anak? Cek tabel ukuran lengkap kami.",
@@ -29,7 +32,7 @@ const ANNOUNCEMENTS = [
 
 const NAV = [
   { label: "Beranda", href: "/" },
-  { label: "Kategori", href: "/koleksi/semua", mega: true },
+  { label: "Kategori", href: "/kategori/semua", mega: true },
   { label: "Ukuran", href: "/panduan-ukuran" },
   { label: "Tentang", href: "/tentang-kami" },
   { label: "Kontak", href: "/kontak" },
@@ -85,25 +88,25 @@ export default function Header() {
               {NAV.map((item) =>
                 item.mega ? (
                   <div key={item.label} className="group static">
-                    <Link href={item.href} className="flex items-center gap-1 py-6 text-[15px] text-ink hover:underline underline-offset-8">
+                    <button type="button" className="flex items-center gap-1 py-6 text-[15px] text-ink">
                       {item.label}
                       <ChevronDown className="h-3.5 w-3.5 transition-transform duration-300 group-hover:rotate-180" />
-                    </Link>
+                    </button>
                     <div className="hp-mega-nav invisible absolute inset-x-0 top-full -translate-y-1.5 border-t border-neutral-200 bg-white opacity-0 shadow-[0_12px_24px_-12px_rgba(0,0,0,0.25)] transition-all duration-300 ease-[cubic-bezier(0.19,1,0.22,1)] group-focus-within:visible group-focus-within:translate-y-0 group-focus-within:opacity-100 group-hover:visible group-hover:translate-y-0 group-hover:opacity-100">
                       <div className="mx-auto grid max-w-7xl grid-cols-[1fr_1fr_1fr_1fr_1.3fr] gap-8 px-8 py-8">
                         {uniformCats.map((c) => (
                           <div key={c.id}>
-                            <Link href={`/koleksi/${c.id}`} className="font-display text-lg font-extrabold text-ink hover:underline">{c.name}</Link>
+                            <Link href={catHref(c.id)} className="font-display text-lg font-extrabold text-ink hover:underline">{c.name}</Link>
                             <ul className="mt-3 space-y-2 text-sm">
                               {(["kemeja", "blus", "celana", "rok", "setelan"] as const).map((t) => (
                                 <li key={t}>
-                                  <Link href={`/koleksi/${c.id}?tipe=${t}`} className="text-muted transition-colors duration-200 hover:text-ink">{TYPE_LABEL[t]}</Link>
+                                  <Link href={`/kategori/${c.id}?tipe=${t}`} className="text-muted transition-colors duration-200 hover:text-ink">{TYPE_LABEL[t]}</Link>
                                 </li>
                               ))}
                             </ul>
                           </div>
                         ))}
-                        <Link href="/koleksi/promo" className="group/promo flex flex-col justify-between overflow-hidden bg-brand-soft p-6 text-ink">
+                        <Link href="/kategori/promo" className="group/promo flex flex-col justify-between overflow-hidden bg-brand-soft p-6 text-ink">
                           <span className="font-display text-2xl font-black leading-tight transition-transform duration-500 group-hover/promo:translate-x-1">Paket tahun ajaran baru</span>
                           <span className="mt-6 text-sm font-bold underline underline-offset-4">Lihat promo</span>
                         </Link>
@@ -170,9 +173,9 @@ export default function Header() {
                   <div className={`hp-disclosure-panel grid transition-[grid-template-rows] duration-300 ease-[cubic-bezier(0.2,0.6,0.4,1)] ${mobileSub ? "is-open grid-rows-[1fr]" : "grid-rows-[0fr]"}`}>
                     <div className="hp-disclosure-inner overflow-hidden">
                       <ul className={`hp-disclosure-content mb-3 space-y-3 pl-3 text-sm text-body transition-opacity duration-300 delay-100 ${mobileSub ? "opacity-100" : "opacity-0"}`}>
-                        <li><Link href="/koleksi/semua" tabIndex={mobile && mobileSub ? 0 : -1} onClick={() => setMobile(false)}>Semua seragam</Link></li>
+                        <li><Link href="/kategori/semua" tabIndex={mobile && mobileSub ? 0 : -1} onClick={() => setMobile(false)}>Semua seragam</Link></li>
                         {uniformCats.map((c) => (
-                          <li key={c.id}><Link href={`/koleksi/${c.id}`} tabIndex={mobile && mobileSub ? 0 : -1} onClick={() => setMobile(false)}>{c.name}</Link></li>
+                          <li key={c.id}><Link href={catHref(c.id)} tabIndex={mobile && mobileSub ? 0 : -1} onClick={() => setMobile(false)}>{c.name}</Link></li>
                         ))}
                       </ul>
                     </div>

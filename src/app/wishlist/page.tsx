@@ -18,7 +18,7 @@ export default function WishlistPage() {
         <div className="py-16 text-center">
           <p className="font-display text-2xl font-extrabold">Belum ada produk tersimpan</p>
           <p className="mt-2 text-sm">Tekan ikon hati pada produk untuk menyimpannya di sini.</p>
-          <Link href="/koleksi/semua" className="mt-6 inline-block bg-ink px-10 py-4 text-xs font-bold uppercase text-white hover:bg-neutral-800">Lihat koleksi</Link>
+          <Link href="/kategori/semua" className="mt-6 inline-block bg-ink px-10 py-4 text-xs font-bold uppercase text-white hover:bg-neutral-800 rounded-lg">Lihat koleksi</Link>
         </div>
       ) : (
         <ul className="grid grid-cols-2 gap-x-4 gap-y-10 lg:grid-cols-4">

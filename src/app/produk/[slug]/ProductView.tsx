@@ -63,7 +63,7 @@ export default function ProductView({ product }: { product: Product }) {
     <div data-cc-animate="" className="mx-auto max-w-6xl px-4 pb-8 md:px-8">
       <nav aria-label="Breadcrumb" className="py-4 text-xs uppercase text-muted">
         <Link href="/" className="hover:text-ink">Beranda</Link> <span className="mx-1">/</span>
-        <Link href={`/koleksi/${cat.id}`} className="hover:text-ink">{cat.name}</Link> <span className="mx-1">/</span>
+        <Link href={`/kategori/${cat.id}`} className="hover:text-ink">{cat.name}</Link> <span className="mx-1">/</span>
         <span className="text-ink">{product.name}</span>
       </nav>
 
